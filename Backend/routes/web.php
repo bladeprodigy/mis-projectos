@@ -22,13 +22,13 @@ Route::get('/', function () {
 
 
 
-Route::post('user/register', [UserController::class, 'register']);
-Route::post('user/login', [UserController::class, 'login']);
-Route::put('user/change-password', [UserController::class, 'changePassword']);
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
 
 
-    Route::post('projects/create', [ProjectController::class,'create']);
-    Route::put('projects/editBy{id}', [ProjectController::class,'editById']);
+Route::middleware('auth')->group(function () {
+    Route::post('/create', 'ProjectController@create');
+    Route::put('/edit/{id}', 'ProjectController@editById');
     Route::get('projects/getBy{id}', [ProjectController::class,'getById']);
     Route::get('projects/getAll', [ProjectController::class,'getALL']);
-    
+});

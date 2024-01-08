@@ -14,6 +14,19 @@ class Project extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsToMany(User::class);
     }
+    protected static function booted()
+    {
+        static::creating(function ($project) {
+            $project->Status = 'Active';
+        });
+
+        static::saving(function ($project) {
+            if ($project->StartDate >= $project->EndDate) {
+                return false;
+            }
+        });
+    }
+    
 }

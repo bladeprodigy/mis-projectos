@@ -22,14 +22,23 @@ class ProjectController extends Controller
    
     public function create(Request $request)
     {
-        $project = Project::create($request->all());
+        $validatedData = $request->validate([
+            'StartDate' => 'required|date',
+            'EndDate' => 'required|date|after:StartDate',
+        ]);
+        $validatedData['status'] = 'active';
+        $project = Project::create($validatedData);
         return response()->json($project, 201);
     }
 
     public function editById($id, Request $request)
     {
+        $validatedData = $request->validate([
+            'StartDate' => 'date',
+            'EndDate' => 'date|after:StartDate',
+        ]);
         $project = Project::findOrFail($id);
-        $project->update($request->all());
+        $project->update($validatedData);
         return response()->json($project, 200);
     }
 
@@ -37,12 +46,6 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         return response()->json($project, 200);
-    }
-
-    public function getAll()
-    {
-        $projects = Project::all();
-        return response()->json($projects, 200);
     }
 
     public function delete($id)

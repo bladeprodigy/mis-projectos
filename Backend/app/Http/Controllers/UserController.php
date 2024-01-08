@@ -37,32 +37,10 @@ class UserController extends Controller
     $credentials = $request->only('email', 'password');
 
     if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-        return response()->json(['message' => 'Login successful'], 200);
+        $token = $request->user()->createToken('authToken')->plainTextToken;
+        return response()->json(['user' => Auth::user(), 'token' => $token], 200);
+    } else {
+        return response()->json(['error' => 'Invalid credentials'], 401);
     }
-
-    return response()->json(['message' => 'Invalid credentials'], 401);
-    }
-
-    public function changePassword(Request $request)
-    {
-        $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required|min:8|confirmed',
-        ]);
-
-        return response()->json([
-            'message' => 'Password changed successfully'
-        ], 200);
-    }
-
-    public function deleteUser(Request $request)
-    {
-        $user = Auth::user();
-        $user->delete();
-    
-        return response()->json([
-            'message' => 'User deleted successfully'
-        ], 200);
-    }
+}
 }

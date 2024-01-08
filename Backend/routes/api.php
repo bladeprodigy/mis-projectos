@@ -17,8 +17,7 @@ use App\Http\Controllers\ProjectController;
 */
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/change-password', [UserController::class, 'changePassword']);
-Route::delete('/delete-user', [UserController::class, 'deleteUser']);
+
 
 Route::post('/create', [ProjectController::class,'create']);
 Route::put('/editById', [ProjectController::class,'editById']);
