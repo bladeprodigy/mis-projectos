@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 
@@ -21,17 +20,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
 
 
 Route::post('user/register', [UserController::class, 'register']);
 Route::post('user/login', [UserController::class, 'login']);
 Route::put('user/change-password', [UserController::class, 'changePassword']);
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::post('/projects', [ProjectController::class,'create']);
-    Route::put('/projects/{id}', [ProjectController::class,'editById']);
-    Route::get('/projects/{id}', [ProjectController::class,'getById']);
-    Route::get('/projects', [ProjectController::class,'getALL']);
-    Route::delete('/projects/{id}', [ProjectController::class,'delete']);
-});
+
+    Route::post('projects/create', [ProjectController::class,'create']);
+    Route::put('projects/editBy{id}', [ProjectController::class,'editById']);
+    Route::get('projects/getBy{id}', [ProjectController::class,'getById']);
+    Route::get('projects/getAll', [ProjectController::class,'getALL']);
+    

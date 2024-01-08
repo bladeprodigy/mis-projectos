@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('User_id')->constrained()->onDelete('cascade');
-            $table->string('Name');
-            $table->dateTime('StartDate');
-            $table->dateTime('EndDate')->nullable();
-            $table->enum('Status', ['Active', 'Inactive']);
-            $table->text('Participants');
-            $table->unsignedBigInteger('Owner');
-            $table->foreign('Owner')->references('id')->on('users'); 
-            $table->text('Description')->nullable();
-            $table->timestamps();
+            Schema::create('projects', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('User_id')->constrained('users')->onDelete('cascade');
+                $table->string('Name');
+                $table->dateTime('StartDate');
+                $table->dateTime('EndDate')->nullable();
+                $table->enum('Status', ['Active', 'Inactive']);
+                $table->text('Participants');
+                $table->text('Description')->nullable();
+                $table->timestamps();
         });
     }
     public function down(): void
@@ -30,3 +28,5 @@ return new class extends Migration
         Schema::dropIfExists('projects');
     }
 };
+
+//--path=\database\migrations\2024_01_08_042553_create_projects_table.php

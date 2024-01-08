@@ -9,11 +9,11 @@ class Project extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'Name', 'StartDate', 'EndDate', 'Status', 'Participants', 'Owner', 'Description',
+        'User_id', 'Name', 'StartDate', 'EndDate', 'Status', 'Participants', 'Description',
     ];
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'Owner');
+        return $this->belongsTo('App\Models\User');
     }
 }

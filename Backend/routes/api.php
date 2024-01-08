@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,12 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/change-password', [UserController::class, 'changePassword']);
 Route::delete('/delete-user', [UserController::class, 'deleteUser']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+
+Route::post('/create', [ProjectController::class,'create']);
+Route::put('/editById', [ProjectController::class,'editById']);
+Route::get('/getById', [ProjectController::class,'getById']);
+Route::get('/getALL', [ProjectController::class,'getALL']);
+ Route::delete('/delete', [ProjectController::class,'delete']);
+    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
