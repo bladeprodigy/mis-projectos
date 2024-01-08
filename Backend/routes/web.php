@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,9 @@ Route::get('/', function () {
 });
 Route::get('pages', [PageController::class, 'index']);
 Route::get('pages/{slug}', [PageController::class, 'show']);
+Route::get('pages/create', [PageController::class, 'create']);
+Route::post('pages', [PageController::class, 'store']);
+
+Route::post('user/register', [UserController::class, 'register']);
+Route::post('user/login', [UserController::class, 'login']);
+Route::put('user/change-password', [UserController::class, 'changePassword']);

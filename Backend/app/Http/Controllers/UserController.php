@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function register(Request $request)
-{
+    {
     $request->validate([
         'name' => 'required|max:255',
         'email' => 'required|email|unique:users',
@@ -24,10 +24,10 @@ class UserController extends Controller
     $user->save();
 
     return response()->json($user, 201);
-}
+    }
 
     public function login(Request $request)
-{
+    {
     
     $request->validate([
         'email' => 'required|email',
@@ -42,7 +42,7 @@ class UserController extends Controller
     }
 
     return response()->json(['message' => 'Invalid credentials'], 401);
-}
+    }
 
     public function changePassword(Request $request)
     {
@@ -59,17 +59,10 @@ class UserController extends Controller
     public function deleteUser(Request $request)
     {
         $user = Auth::user();
-    
-        if (!$user) {
-            return response()->json([
-                'message' => 'No user is currently authenticated'
-            ], 401);
-        }
-    
         $user->delete();
     
         return response()->json([
             'message' => 'User deleted successfully'
         ], 200);
     }
-?>
+}
