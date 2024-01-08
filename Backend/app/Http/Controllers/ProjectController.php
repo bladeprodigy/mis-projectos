@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Exceptions\ProjectNotFoundException;
 
 
 use App\Models\Project; 
@@ -8,6 +9,16 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+    public function show($id)
+    {
+        $project = Project::find($id);
+
+        if (!$project) {
+            throw new ProjectNotFoundException($id);
+        }
+
+        return view('projects.show', ['project' => $project]);
+    }
    
     public function create(Request $request)
     {
