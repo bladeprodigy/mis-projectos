@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PageController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,11 +20,18 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('pages', [PageController::class, 'index']);
-Route::get('pages/{slug}', [PageController::class, 'show']);
-Route::get('pages/create', [PageController::class, 'create']);
-Route::post('pages', [PageController::class, 'store']);
+
+Auth::routes();
+
 
 Route::post('user/register', [UserController::class, 'register']);
 Route::post('user/login', [UserController::class, 'login']);
 Route::put('user/change-password', [UserController::class, 'changePassword']);
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('/projects', [ProjectController::class,'create']);
+    Route::put('/projects/{id}', [ProjectController::class,'editById']);
+    Route::get('/projects/{id}', [ProjectController::class,'getById']);
+    Route::get('/projects', [ProjectController::class,'getALL']);
+    Route::delete('/projects/{id}', [ProjectController::class,'delete']);
+});

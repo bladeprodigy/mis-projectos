@@ -2,63 +2,42 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Project; 
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+   
+    public function create(Request $request)
     {
-        //
+        $project = Project::create($request->all());
+        return response()->json($project, 201);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function editById($id, Request $request)
     {
-        //
+        $project = Project::findOrFail($id);
+        $project->update($request->all());
+        return response()->json($project, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function getById($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        return response()->json($project, 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function getAll()
     {
-        //
+        $projects = Project::all();
+        return response()->json($projects, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function delete($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return response()->json(null, 204);
     }
 }

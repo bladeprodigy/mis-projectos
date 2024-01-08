@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->dateTime()
+            $table->foreignId('User_id')->constrained()->onDelete('cascade');
+            $table->string('Name');
+            $table->dateTime('StartDate');
+            $table->dateTime('EndDate')->nullable();
+            $table->enum('Status', ['Active', 'Inactive']);
+            $table->text('Participants');
+            $table->unsignedBigInteger('Owner');
+            $table->foreign('Owner')->references('id')->on('users'); 
+            $table->text('Description')->nullable();
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('projects');
