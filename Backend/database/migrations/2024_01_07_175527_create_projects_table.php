@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->dateTime('start_date');
             $table->dateTime('end_date_planned');
-            $table->enum('status', ['new', 'ongoing', 'completed']);
+            $table->boolean('status')->default(true)->change();
             $table->text('participants')->nullable();
             $table->foreignId('owner_id')->constrained('users');
             $table->string('description')->nullable();
