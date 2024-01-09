@@ -1,10 +1,13 @@
 import React from 'react';
 import { Box, TextField, Button, Typography, Container } from '@mui/material';
+import {useNavigate} from "react-router-dom";
 
 function Login() {
+    let navigate = useNavigate();
     const handleLogin = (event) => {
         event.preventDefault();
         // Login logic here
+        navigate('/projects')
     };
 
     return (
