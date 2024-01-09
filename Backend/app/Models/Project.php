@@ -5,28 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+namespace App\Models;
+
 class Project extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'User_id', 'Name', 'StartDate', 'EndDate', 'Status', 'Participants', 'Description',
+    protected $fillable = ['name', 'start_date', 'end_date_planned', 'status', 'participants', 'owner_id', 'description'];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
-
-    public function user()
+    public function owner()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
-    protected static function booted()
-    {
-        static::creating(function ($project) {
-            $project->Status = 'Ongoing';
-        });
-
-        static::saving(function ($project) {
-            if ($project->StartDate >= $project->EndDate) {
-                return false;
-            }
-        });
-    }
-    
 }

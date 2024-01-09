@@ -1,13 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
+<<<<<<< HEAD
 use App\Exceptions\ProjectNotFoundException;
 use App\Models\User;
 use App\Models\Project; 
+=======
+
+use App\Models\Project;
+>>>>>>> parent of 6a5f8084 (Delete Backend directory in main zeby nie bylo konfliktow)
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+<<<<<<< HEAD
     public function show($id)
     {
         $project = Project::find($id);
@@ -126,4 +132,37 @@ class ProjectController extends Controller
 
     return response()->json($users, 200);
     }
+=======
+    public function index()
+    {
+        $projects = Project::all();
+        return response()->json($projects);
+    }
+
+    public function show($id)
+    {
+        $project = Project::findOrFail($id);
+        return response()->json($project);
+    }
+
+    public function store(Request $request)
+    {
+        $project = Project::create($request->all());
+        return response()->json($project, 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $project = Project::findOrFail($id);
+        $project->update($request->all());
+        return response()->json($project, 200);
+    }
+
+    public function destroy($id)
+    {
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return response()->json(null, 204);
+    }
+>>>>>>> parent of 6a5f8084 (Delete Backend directory in main zeby nie bylo konfliktow)
 }

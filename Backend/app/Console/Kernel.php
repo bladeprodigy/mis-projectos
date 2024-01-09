@@ -24,8 +24,11 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+<<<<<<< HEAD
     protected $routeMiddleware = [
         // Inne middleware...
         'auth.custom' => \App\Http\Middleware\Authenticate::class,
     ];
+=======
+>>>>>>> parent of 6a5f8084 (Delete Backend directory in main zeby nie bylo konfliktow)
 }

@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+<<<<<<< HEAD
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 
+=======
+>>>>>>> parent of 6a5f8084 (Delete Backend directory in main zeby nie bylo konfliktow)
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +22,7 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
+<<<<<<< HEAD
 
 
 
@@ -41,3 +45,5 @@ Route::middleware('auth')->group(function () {
         Route::get('/projects/{projectId}/users', [ProjectController::class, 'getUsers']);
     });
 });
+=======
+>>>>>>> parent of 6a5f8084 (Delete Backend directory in main zeby nie bylo konfliktow)
