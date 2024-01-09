@@ -19,16 +19,25 @@ class ProjectController extends Controller
         return view('projects.show', ['project' => $project]);
     }
    
-    public function create(Request $request)
-    {
-        $validatedData = $request->validate([
-            'StartDate' => 'required|date',
-            'EndDate' => 'required|date|after:StartDate',
-        ]);
-        $validatedData['status'] = 'ongoing';
-        $project = Project::create($validatedData);
-        return response()->json($project, 201);
-    }
+    public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'name' => 'required|max:255',
+        'description' => 'required',
+        'startDate' => 'required|date',
+        'endDate' => 'required|date',
+    ]);
+
+    $project = new Project($validatedData);
+    $project->user_id = auth()->user()->id;
+    $project->status = 'ongoing';
+    $project->save(); // This will generate a project_id
+
+    // Attach the currently authenticated user to the project
+    $project->users()->attach(auth()->user()->id);
+
+    return response()->json($project, 201);
+}
 
     public function editById($id, Request $request)
     {

@@ -21,9 +21,9 @@ Route::post('/login', [UserController::class, 'login']);
 
 
 Route::middleware('auth')->group(function () {
-    Route::middleware('auth')->group(function () {
+        Route::middleware('auth')->group(function () {
         Route::get('/projects/{id}', [ProjectController::class, 'show']);
-        Route::post('/projects', [ProjectController::class, 'create']);
+        Route::post('/projects', [ProjectController::class, 'store']);
         Route::put('/projects/{id}', [ProjectController::class, 'editById']);
         Route::post('/projects/{projectId}/users', [ProjectController::class, 'addUserToProject']);
         Route::delete('/projects/{projectId}/users/{userId}', [ProjectController::class, 'removeUserFromProject']);

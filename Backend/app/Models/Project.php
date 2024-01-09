@@ -8,18 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'User_id', 'Name', 'StartDate', 'EndDate', 'Status', 'Participants', 'Description',
-    ];
+    protected $fillable = ['name', 'description', 'startDate', 'endDate', 'user_id', 'status'];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'project_user');
     }
     protected static function booted()
     {
         static::creating(function ($project) {
-            $project->Status = 'Ongoing';
+            $project->Status = 'ongoing';
         });
 
         static::saving(function ($project) {
