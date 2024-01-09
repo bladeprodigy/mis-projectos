@@ -9,12 +9,8 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-<<<<<<< HEAD
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.3"
-=======
-        "laravel/tinker": "^2.8"
->>>>>>> parent of 6a5f8084 (Delete Backend directory in main zeby nie bylo konfliktow)
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
