@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Carbon;
 use App\Exceptions\ProjectNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Models\User;
 use App\Models\Project; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,34 +62,40 @@ class ProjectController extends Controller
 
 
     public function update(Request $request, Project $project)
-    {
-        $validatedData = $request->validate([
-            'name' => 'sometimes|required|max:255',
-            'description' => 'sometimes|required',
-            'endDate' => 'sometimes|required|date',
-            'participants' => 'sometimes|nullable|string',
-        ]);
-  
-        if ($project->status === 'finished') {
-            return response()->json(['error' => 'You cannot edit a finished project.'], 403);
-        }
-    
-        $project->fill($validatedData);
-        $project->save();
-    
-        return response()->json($project, 200);
+{
+    if ($project->owner_id !== Auth::id()) {
+        return response()->json(['error' => 'You can only edit your own projects.'], 403);
     }
+    if ($project->status === 'completed') {
+        return response()->json(['error' => 'You cannot edit a completed project.'], 403);
+    }
+
+
+    $validatedData = $request->validate([
+        'name' => 'sometimes|required|max:255',
+        'description' => 'sometimes|required',
+        'endDate' => 'sometimes|required|date',
+        'participants' => 'sometimes|nullable|string',
+    ]);
+
+    $project->fill($validatedData);
+    $project->save();
+
+    return response()->json($project, 200);
+}
 
 
     public function destroy(Project $project)
     {
+    if ($project->owner_id !== Auth::id()) {
+         return response()->json(['error' => 'You can only delete your own projects.'], 403);
+    }
+
     if ($project->status !== 'ongoing') {
         return response()->json(['error' => 'You can only delete ongoing projects.'], 403);
     }
 
-    if ($project->owner_id !== Auth::id()) {
-        return response()->json(['error' => 'You can only delete your own projects.'], 403);
-    }
+
 
     $project->delete();
 
@@ -100,16 +104,21 @@ class ProjectController extends Controller
 
 
     public function complete(Project $project)
-{
-    if ($project->status !== 'ongoing') {
-        return response()->json(['error' => 'You can only complete ongoing projects.'], 403);
+    {
+        if ($project->owner_id !== Auth::user()->id) {
+            return response()->json(['error' => 'You can only complete your own projects.'], 403);
+        }
+        if ($project->status !== 'ongoing') {
+            return response()->json(['error' => 'You can only complete ongoing projects.'], 403);
+        }
+    
+
+    
+        $project->status = 'completed';
+        $project->save();
+    
+        return response()->json($project, 200);
     }
-
-    $project->status = 'completed';
-    $project->save();
-
-    return response()->json($project, 200);
-}
 
 
 }

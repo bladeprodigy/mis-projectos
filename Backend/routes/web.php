@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,8 +25,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 
-Route::middleware('auth')->group(function () {
-    Route::middleware('auth')->group(function () {
+Route::middleware('jwt.auth')->group(function () {
         Route::post('/projects', [ProjectController::class, 'store']);
         Route::get('/projects/ongoing', [ProjectController::class, 'getOngoingProjects']);
         Route::get('/projects/completed', [ProjectController::class, 'getCompletedProjects']);
@@ -35,5 +33,4 @@ Route::middleware('auth')->group(function () {
         Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
         Route::put('/projects/{project}', [ProjectController::class, 'update']);
         Route::get('/projects/{project}', [ProjectController::class, 'show']);
-});
 });
