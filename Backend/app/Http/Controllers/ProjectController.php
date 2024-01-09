@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Carbon;
 use App\Exceptions\ProjectNotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\User;
 use App\Models\Project; 
 use Illuminate\Http\Request;
@@ -9,140 +11,105 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
-    public function show($id)
-    {
-        $project = Project::find($id);
-
-        if (!$project) {
-            throw new ProjectNotFoundException($id);
-        }
-
-        return view('projects.show', ['project' => $project]);
-    }
-   
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
-            'startDate' => 'required|date',
-            'endDate' => 'required|date',
+            'plannedEndDate' => 'required|date',
         ]);
     
-        $project = new Project($validatedData);
-        $project->status = 'ongoing';
+        $project = new Project;
+        $project->name = $request->name;
+        $project->description = $request->description;
+        $project->plannedEndDate = $request->plannedEndDate;
+        $project->owner_id = Auth::id();
+        $project->participants = $request->participants;
+        $project->save();
     
-        try {
-            // Save the project
-            $project->save();
-    
-            // Attach the authenticated user to the project
-            if (auth()->check()) {
-                $project->users()->attach(auth()->user()->id);
-            } else {
-                return response()->json(['error' => 'User not authenticated'], 401);
-            }
-    
-            return response()->json($project, 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json($project, 201);
     }
 
-    public function editById($id, Request $request)
+
+    public function show($id)
+{
+    try {
+        $project = Project::findOrFail($id);
+    } catch (ModelNotFoundException $e) {
+        throw new ProjectNotFoundException('Project not found.');
+    }
+
+    return response()->json(['id' => $project->id], 200);
+}
+
+
+    public function getOngoingProjects()
+    {
+    $projects = Project::where('status', 'ongoing')
+        ->where('owner_id', Auth::id())
+        ->get();
+
+    return response()->json($projects, 200);
+    }
+
+
+    public function getCompletedProjects()
+    {
+    $projects = Project::where('status', 'completed')
+        ->where('owner_id', Auth::id())
+        ->get();
+
+    return response()->json($projects, 200);
+    }
+
+
+    public function update(Request $request, Project $project)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'name' => 'sometimes|required|max:255',
+            'description' => 'sometimes|required',
+            'endDate' => 'sometimes|required|date',
+            'participants' => 'sometimes|nullable|string',
         ]);
-    
-        $project = Project::findOrFail($id);
-        $project->update($validatedData);
-    
-        return response()->json($project, 200);
-    }
-
-    public function addUserToProject(Request $request, $projectId)
-    {
-        $user = User::findOrFail($request->userId);
-        $project = Project::findOrFail($projectId);
-    
-        if (auth()->user()->id !== $project->user_id) {
-            return response()->json(['error' => 'You can only add users to your own projects.'], 403);
+  
+        if ($project->status === 'finished') {
+            return response()->json(['error' => 'You cannot edit a finished project.'], 403);
         }
     
-        $project->users()->attach($user->id);
-    
-        return response()->json(['message' => 'User added to project successfully'], 200);
-    }
-
-    public function removeUserFromProject($projectId, $userId)
-    {
-        $project = Project::findOrFail($projectId);
-
-        if (auth()->user()->id === $project->user_id && auth()->user()->id === $userId) {
-            return response()->json(['error' => 'You cannot remove yourself from your own project.'], 403);
-        }
-    
-        if (auth()->user()->id !== $project->user_id && auth()->user()->id !== $userId) {
-            return response()->json(['error' => 'You can only remove yourself or users from your own projects.'], 403);
-        }
-    
-        $project->users()->detach($userId);
-    
-        return response()->json(null, 204);
-    }
-
-    public function getById($id)
-    {
-        $project = Project::findOrFail($id);
-        return response()->json($project, 200);
-    }
-
-    public function delete($id)
-    {
-        $project = Project::findOrFail($id);
-
-        if (auth()->user()->id !== $project->user_id) {
-            return response()->json(['error' => 'You can only delete your own projects.'], 403);
-        }
-    
-        $project->delete();
-    
-        return response()->json(null, 204);
-    }
-    
-    public function finish($id)
-    {
-    $project = Project::findOrFail($id);
-    if ($project->status == 'ongoing') {
-        $project->status = 'finished';
+        $project->fill($validatedData);
         $project->save();
+    
         return response()->json($project, 200);
-    } else {
-        return response()->json(['error' => 'Project is not ongoing'], 400);
-    }
     }
 
-    public function getOngoing(Request $request)
+
+    public function destroy(Project $project)
     {
-    $user = $request->user();
-    $projects = $user->projects()->where('status', 'ongoing')->get();
-    return response()->json($projects, 200);
+    if ($project->status !== 'ongoing') {
+        return response()->json(['error' => 'You can only delete ongoing projects.'], 403);
     }
 
-    public function getFinished(Request $request)
-    {
-    $user = $request->user();
-    $projects = $user->projects()->where('status', 'finished')->get();
-    return response()->json($projects, 200);
+    if ($project->owner_id !== Auth::id()) {
+        return response()->json(['error' => 'You can only delete your own projects.'], 403);
     }
 
-    public function getUsers($projectId)
-    {
-    $project = Project::findOrFail($projectId);
-    $users = $project->users;
+    $project->delete();
 
-    return response()->json($users, 200);
+    return response()->json(['message' => 'Project deleted successfully.'], 200);
     }
+
+
+    public function complete(Project $project)
+{
+    if ($project->status !== 'ongoing') {
+        return response()->json(['error' => 'You can only complete ongoing projects.'], 403);
+    }
+
+    $project->status = 'completed';
+    $project->save();
+
+    return response()->json($project, 200);
+}
+
+
 }

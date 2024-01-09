@@ -22,16 +22,12 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth')->group(function () {
         Route::middleware('auth')->group(function () {
-        Route::get('/projects/{id}', [ProjectController::class, 'show']);
-        Route::post('/projects', [ProjectController::class, 'store']);
-        Route::put('/projects/{id}', [ProjectController::class, 'editById']);
-        Route::post('/projects/{projectId}/users', [ProjectController::class, 'addUserToProject']);
-        Route::delete('/projects/{projectId}/users/{userId}', [ProjectController::class, 'removeUserFromProject']);
-        Route::get('/projects/{id}', [ProjectController::class, 'getById']);
-        Route::delete('/projects/{id}', [ProjectController::class, 'delete']);
-        Route::put('/projects/{id}/finish', [ProjectController::class, 'finish']);
-        Route::get('/projects/ongoing', [ProjectController::class, 'getOngoing']);
-        Route::get('/projects/finished', [ProjectController::class, 'getFinished']);
-        Route::get('/projects/{projectId}/users', [ProjectController::class, 'getUsers']);
+            Route::post('/projects', [ProjectController::class, 'store']);
+            Route::get('/projects/ongoing', [ProjectController::class, 'getOngoingProjects']);
+            Route::get('/projects/completed', [ProjectController::class, 'getCompletedProjects']);
+            Route::patch('/projects/{project}/complete', [ProjectController::class, 'complete']);
+            Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
+            Route::put('/projects/{project}', [ProjectController::class, 'update']);
+            Route::get('/projects/{project}', [ProjectController::class, 'show']);
     });
 });
