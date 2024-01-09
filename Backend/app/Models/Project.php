@@ -19,7 +19,7 @@ class Project extends Model
     protected static function booted()
     {
         static::creating(function ($project) {
-            $project->Status = 'Active';
+            $project->Status = 'Ongoing';
         });
 
         static::saving(function ($project) {

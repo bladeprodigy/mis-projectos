@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
             Schema::create('projects', function (Blueprint $table) {
@@ -17,7 +14,7 @@ return new class extends Migration
                 $table->string('Name');
                 $table->dateTime('StartDate');
                 $table->dateTime('EndDate')->nullable();
-                $table->enum('Status', ['Active', 'Inactive']);
+                $table->enum('Status', ['Ongoing', 'Finished']);
                 $table->text('Participants');
                 $table->text('Description')->nullable();
                 $table->timestamps();
@@ -29,4 +26,3 @@ return new class extends Migration
     }
 };
 
-//--path=\database\migrations\2024_01_08_042553_create_projects_table.php

@@ -21,7 +21,6 @@ class User extends Authenticatable
     protected $hidden = [
         'id',
         'password',
-        'remember_token',
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
