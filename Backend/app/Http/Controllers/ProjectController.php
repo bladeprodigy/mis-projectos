@@ -5,6 +5,7 @@ use App\Exceptions\ProjectNotFoundException;
 use App\Models\User;
 use App\Models\Project; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -20,24 +21,33 @@ class ProjectController extends Controller
     }
    
     public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'name' => 'required|max:255',
-        'description' => 'required',
-        'startDate' => 'required|date',
-        'endDate' => 'required|date',
-    ]);
-
-    $project = new Project($validatedData);
-    $project->user_id = auth()->user()->id;
-    $project->status = 'ongoing';
-    $project->save(); // This will generate a project_id
-
-    // Attach the currently authenticated user to the project
-    $project->users()->attach(auth()->user()->id);
-
-    return response()->json($project, 201);
-}
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+        ]);
+    
+        $project = new Project($validatedData);
+        $project->status = 'ongoing';
+    
+        try {
+            // Save the project
+            $project->save();
+    
+            // Attach the authenticated user to the project
+            if (auth()->check()) {
+                $project->users()->attach(auth()->user()->id);
+            } else {
+                return response()->json(['error' => 'User not authenticated'], 401);
+            }
+    
+            return response()->json($project, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     public function editById($id, Request $request)
     {
