@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
     Box,
     Button,
     Card,
-    CardContent, Dialog,
+    CardContent,
+    Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
@@ -20,8 +21,8 @@ const fetchProjectDetails = (projectId) => {
     return {
         id: projectId,
         name: 'Project X',
-        startDate: '2024-09-01',
-        endDate: '2024-09-02',
+        creationDate: '2024-09-01',
+        plannedEndDate: '2024-09-02',
         participants: 'Tom, Andy, Cindy',
         description: 'A very secret project',
         status: 'Ongoing' // or 'Finished'
@@ -30,7 +31,7 @@ const fetchProjectDetails = (projectId) => {
 
 const ProjectDetails = () => {
     let { projectId } = useParams();
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     // Simulate fetching project details
     const project = fetchProjectDetails(projectId);
@@ -80,18 +81,20 @@ const ProjectDetails = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleEdit}>Edit</Button>
-                <Button variant="contained" color="success" onClick={handleOpenFinishDialog}>Finish</Button>
-                <Button variant="contained" color="error" onClick={handleOpenDeleteDialog}>Delete</Button>
-            </Box>
+            {project.status === 'Ongoing' && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}>
+                    <Button variant="contained" color="primary" onClick={handleEdit}>Edit</Button>
+                    <Button variant="contained" color="success" onClick={handleOpenFinishDialog}>Finish</Button>
+                    <Button variant="contained" color="error" onClick={handleOpenDeleteDialog}>Delete</Button>
+                </Box>
+            )}
             <Card sx={{ minWidth: '80%', mb: 4 }}>
                 <CardContent>
                     <Typography variant="h4" component="div" gutterBottom>
                         {project.name}
                     </Typography>
-                    <Typography variant="subtitle1" gutterBottom><strong>Start Date:</strong> {project.startDate}</Typography>
-                    <Typography variant="subtitle1" gutterBottom><strong>End Date:</strong> {project.endDate}</Typography>
+                    <Typography variant="subtitle1" gutterBottom><strong>Creation Date:</strong> {project.creationDate}</Typography>
+                    <Typography variant="subtitle1" gutterBottom><strong>Planned End Date:</strong> {project.plannedEndDate}</Typography>
                     <Typography variant="subtitle1" gutterBottom><strong>Participants:</strong> {project.participants}</Typography>
                     <Typography variant="subtitle1" gutterBottom><strong>Description:</strong> {project.description}</Typography>
                     <Typography variant="subtitle1" gutterBottom><strong>Status:</strong> {project.status}</Typography>
