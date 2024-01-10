@@ -21,7 +21,7 @@ return [
 
     'allowed_origins' => [
         'http://localhost:3000',
-        'https://therewillbesomethingherelaterforsurexyz.com',
+        'https://misproyectos.azurewebsites.net/',
     ],
 
     'allowed_origins_patterns' => [],
