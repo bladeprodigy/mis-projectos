@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
-    Box, Button,
+    Box,
+    Button,
     Container,
     Paper,
     Table,
@@ -16,19 +17,19 @@ import NewProjectDialog from "./NewProjectDialog";
 import {useNavigate} from "react-router-dom";
 
 const ongoingProjects = [
-    { name: 'Ongoing Project 1', startDate: '09-14-2024', endDate: '03-12-2025', participants: 'Carol Johnson, Alice Smith, Dave Doe, Jane Brown, Dave Smith', description: 'Description of ongoing project 1. An in-depth look into the progress and milestones achieved.' },
-    { name: 'Ongoing Project 2', startDate: '05-06-2024', endDate: '04-04-2025', participants: 'Bob Doe, Bob Davis, Carol Smith', description: 'Description of ongoing project 2. An in-depth look into the progress and milestones achieved.' },
-    { name: 'Ongoing Project 3', startDate: '04-23-2024', endDate: '08-21-2025', participants: 'Bob Johnson, Dave Johnson, Jane Davis, Carol Davis', description: 'Description of ongoing project 3. An in-depth look into the progress and milestones achieved.' },
-    { name: 'Ongoing Project 4', startDate: '10-15-2024', endDate: '03-30-2025', participants: 'Alice Brown, Bob Wilson, Bob Wilson, John Brown', description: 'Description of ongoing project 4. An in-depth look into the progress and milestones achieved.' },
-    { name: 'Ongoing Project 5', startDate: '02-26-2024', endDate: '01-16-2025', participants: 'Dave Johnson, John Smith', description: 'Description of ongoing project 5. An in-depth look into the progress and milestones achieved.' }
+    { name: 'Ongoing Project 1', creationDate: '09-14-2024', plannedEndDate: '03-12-2025', participants: 'Carol Johnson, Alice Smith, Dave Doe, Jane Brown, Dave Smith', description: 'Description of ongoing project 1. An in-depth look into the progress and milestones achieved.' },
+    { name: 'Ongoing Project 2', creationDate: '05-06-2024', plannedEndDate: '04-04-2025', participants: 'Bob Doe, Bob Davis, Carol Smith', description: 'Description of ongoing project 2. An in-depth look into the progress and milestones achieved.' },
+    { name: 'Ongoing Project 3', creationDate: '04-23-2024', plannedEndDate: '08-21-2025', participants: 'Bob Johnson, Dave Johnson, Jane Davis, Carol Davis', description: 'Description of ongoing project 3. An in-depth look into the progress and milestones achieved.' },
+    { name: 'Ongoing Project 4', creationDate: '10-15-2024', plannedEndDate: '03-30-2025', participants: 'Alice Brown, Bob Wilson, Bob Wilson, John Brown', description: 'Description of ongoing project 4. An in-depth look into the progress and milestones achieved.' },
+    { name: 'Ongoing Project 5', creationDate: '02-26-2024', plannedEndDate: '01-16-2025', participants: 'Dave Johnson, John Smith', description: 'Description of ongoing project 5. An in-depth look into the progress and milestones achieved.' }
 ];
 
 const finishedProjects = [
-    { name: 'Finished Project A', startDate: '01-01-2022', endDate: '02-02-2022', participants: 'Carol, Dave', description: 'A completed project with results' },
-    { name: 'Finished Project B', startDate: '03-15-2022', endDate: '04-15-2022', participants: 'Alice, Bob, Charlie', description: 'A successful project that met all its goals.' },
-    { name: 'Finished Project C', startDate: '05-20-2022', endDate: '06-22-2022', participants: 'Dave, Erin', description: 'Project completed with outstanding feedback.' },
-    { name: 'Finished Project D', startDate: '07-03-2022', endDate: '08-14-2022', participants: 'Fiona, George', description: 'A project that had a significant impact on our operations.' },
-    { name: 'Finished Project E', startDate: '09-10-2022', endDate: '10-12-2022', participants: 'Hannah, Ian, Jack', description: 'Finished ahead of schedule with excellent results.' }
+    { name: 'Finished Project A', creationDate: '01-01-2022', plannedEndDate: '02-02-2022', participants: 'Carol, Dave', description: 'A completed project with results' },
+    { name: 'Finished Project B', creationDate: '03-15-2022', plannedEndDate: '04-15-2022', participants: 'Alice, Bob, Charlie', description: 'A successful project that met all its goals.' },
+    { name: 'Finished Project C', creationDate: '05-20-2022', plannedEndDate: '06-22-2022', participants: 'Dave, Erin', description: 'Project completed with outstanding feedback.' },
+    { name: 'Finished Project D', creationDate: '07-03-2022', plannedEndDate: '08-14-2022', participants: 'Fiona, George', description: 'A project that had a significant impact on our operations.' },
+    { name: 'Finished Project E', creationDate: '09-10-2022', plannedEndDate: '10-12-2022', participants: 'Hannah, Ian, Jack', description: 'Finished ahead of schedule with excellent results.' }
 ];
 
 
@@ -106,8 +107,8 @@ function ProjectsPage() {
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center">NAME</TableCell>
-                                <TableCell align="center">START DATE</TableCell>
-                                <TableCell align="center">END DATE</TableCell>
+                                <TableCell align="center">CREATION DATE</TableCell>
+                                <TableCell align="center">PLANNED END DATE</TableCell>
                                 <TableCell align="center">PARTICIPANTS</TableCell>
                                 <TableCell align="center">DESCRIPTION</TableCell>
                             </TableRow>
@@ -121,8 +122,8 @@ function ProjectsPage() {
                                     sx={{ cursor: 'pointer' }}
                                 >
                                     <TableCell align="center">{project.name}</TableCell>
-                                    <TableCell align="center">{project.startDate}</TableCell>
-                                    <TableCell align="center">{project.endDate}</TableCell>
+                                    <TableCell align="center">{project.creationDate}</TableCell>
+                                    <TableCell align="center">{project.plannedEndDate}</TableCell>
                                     <TableCell align="center">{project.participants}</TableCell>
                                     <TableCell align="center">{project.description}</TableCell>
                                 </TableRow>

@@ -1,13 +1,42 @@
-import React from 'react';
-import { Box, TextField, Button, Typography, Container } from '@mui/material';
-import {useNavigate} from "react-router-dom";
+import React, { useState } from 'react';
+import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-    let navigate = useNavigate();
-    const handleLogin = (event) => {
+    const navigate = useNavigate();
+    const [error, setError] = useState('');
+
+    const handleLogin = async (event) => {
         event.preventDefault();
-        // Login logic here
-        navigate('/projects')
+        const data = new FormData(event.currentTarget);
+        const payload = {
+            email: data.get('email'),
+            password: data.get('password'),
+        };
+
+        try {
+            const response = await fetch('https://laravelfinalproject.azurewebsites.net/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+            console.log(result);
+
+            if (response.ok) {
+                // Correctly access the token from the API response
+                localStorage.setItem('accessToken', result.access_token);
+                navigate('/projects');
+            } else {
+                setError('Login failed: ' + (result.message || 'Please check your credentials'));
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            setError('Network error');
+        }
     };
 
     return (
@@ -24,6 +53,7 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Login
                 </Typography>
+                {error && <Alert severity="error">{error}</Alert>}
                 <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
