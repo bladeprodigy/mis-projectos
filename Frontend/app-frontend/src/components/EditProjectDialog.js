@@ -1,9 +1,5 @@
-// EditProjectDialog.js
 import React from 'react';
-import {
-    Dialog, DialogTitle, DialogContent, DialogActions,
-    Button, TextField, Box
-} from '@mui/material';
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 
 const EditProjectDialog = ({ open, onClose, project, onSave }) => {
     const handleSubmit = (event) => {
@@ -11,8 +7,7 @@ const EditProjectDialog = ({ open, onClose, project, onSave }) => {
         const formData = new FormData(event.currentTarget);
         onSave({
             name: formData.get('name'),
-            startDate: formData.get('startDate'),
-            endDate: formData.get('endDate'),
+            plannedEndDate: formData.get('plannedEndDate'),
             participants: formData.get('participants'),
             description: formData.get('description'),
         });
@@ -34,23 +29,13 @@ const EditProjectDialog = ({ open, onClose, project, onSave }) => {
                     />
                     <TextField
                         margin="dense"
-                        id="startDate"
-                        label="Start Date"
-                        type="date"
-                        fullWidth
-                        InputLabelProps={{ shrink: true }}
-                        defaultValue={project.startDate}
-                        name="startDate"
-                    />
-                    <TextField
-                        margin="dense"
                         id="endDate"
-                        label="End Date"
+                        label="Planned End Date"
                         type="date"
                         fullWidth
                         InputLabelProps={{ shrink: true }}
-                        defaultValue={project.endDate}
-                        name="endDate"
+                        defaultValue={project.plannedEndDate}
+                        name="plannedEndDate"
                     />
                     <TextField
                         margin="dense"
