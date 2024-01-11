@@ -30,15 +30,19 @@ class ProjectController extends Controller
 
 
     public function show($id)
-{
-    try {
-        $project = Project::findOrFail($id);
-    } catch (ModelNotFoundException $e) {
-        throw new ProjectNotFoundException('Project not found.');
+    {
+        try {
+            $project = Project::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            throw new ProjectNotFoundException('Project not found.');
+        }
+    
+        if ($project->owner_id !== Auth::id()) {
+            return response()->json(['error' => 'You can only view your own projects.'], 403);
+        }
+    
+        return response()->json($project, 200);
     }
-
-    return response()->json(['id' => $project->id], 200);
-}
 
 
     public function getOngoingProjects()
@@ -70,16 +74,21 @@ class ProjectController extends Controller
         return response()->json(['error' => 'You cannot edit a completed project.'], 403);
     }
 
-
     $validatedData = $request->validate([
-        'name' => 'sometimes|required|max:255',
+        'name' => 'nullable|string|min:1|max:255',
         'description' => 'sometimes|required',
         'endDate' => 'sometimes|required|date',
         'participants' => 'sometimes|nullable|string',
     ]);
 
+    if (array_key_exists('name', $validatedData) && $validatedData['name'] === null) {
+        return response()->json(['error' => 'Failed to update. Check your input.'], 422);
+    }
+
     $project->fill($validatedData);
-    $project->save();
+    if (!$project->save()) {
+        return response()->json(['error' => 'Failed to update. Check your input.'], 500);
+    }
 
     return response()->json($project, 200);
 }
@@ -94,8 +103,6 @@ class ProjectController extends Controller
     if ($project->status !== 'ongoing') {
         return response()->json(['error' => 'You can only delete ongoing projects.'], 403);
     }
-
-
 
     $project->delete();
 
