@@ -44,7 +44,6 @@ class ProjectController extends Controller
         return response()->json($project, 200);
     }
 
-
     public function getOngoingProjects()
     {
     $projects = Project::where('status', 'ongoing')
@@ -53,7 +52,6 @@ class ProjectController extends Controller
 
     return response()->json($projects, 200);
     }
-
 
     public function getCompletedProjects()
     {
@@ -126,6 +124,5 @@ class ProjectController extends Controller
     
         return response()->json($project, 200);
     }
-
 
 }
