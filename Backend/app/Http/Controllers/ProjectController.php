@@ -120,6 +120,7 @@ class ProjectController extends Controller
 
     
         $project->status = 'completed';
+        $project->plannedEndDate = \Carbon\Carbon::now();
         $project->save();
     
         return response()->json($project, 200);
